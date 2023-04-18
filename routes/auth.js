@@ -19,7 +19,7 @@ router.post('/signup', async (req, res) => {
         }
 
         // 패스워드 및 패스워드 확인
-        if(password != confirm){
+        if(password !== confirm){
             res.status(412).json({
                 errorMessage: "패스워드가 일치하지 않습니다."
             });
@@ -28,12 +28,13 @@ router.post('/signup', async (req, res) => {
 
         // 패스워드 형식 검사
         // 최소 4자 이상, 닉네임과 같은 값이 포함된 경우 회원가입에 실패
-        if(password.length < 4){
+        let pw = password.toString();
+        if(pw.length < 4){
             res.status(412).json({
                 errorMessage: "패스워드가 형식이 일치하지 않습니다."
             });
             return;
-        } else if(password.includes(nickname)){
+        } else if(pw.includes(nickname)){
             res.status(412).json({
                 errorMessage: "패스워드에 닉네임이 포함되어 있습니다."
             });
