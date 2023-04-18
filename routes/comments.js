@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const Comment = require("../schemas/comment");
+const Comment = require("../schemas/comments");
 const authMiddleware = require("../middlewares/auth-middleware");
-const Post = require("../schemas/post");
+const Post = require("../schemas/posts");
 
 // 댓글 생성
 router.post("/:_postId/comments", authMiddleware, async (req, res) => {

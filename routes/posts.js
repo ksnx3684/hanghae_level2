@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Post = require("../schemas/post");
+const Post = require("../schemas/posts");
 const authMiddleware = require("../middlewares/auth-middleware");
 
 // 게시글 작성
@@ -125,7 +125,6 @@ router.put("/:_postId", authMiddleware, async (req, res) => {
   }
 });
 
-// 401 질문
 // 게시글 삭제
 router.delete("/:_postId", authMiddleware, async (req, res) => {
   const { _postId } = req.params;
