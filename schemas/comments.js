@@ -1,26 +1,26 @@
 const mongoose = require("mongoose");
 
 const commentsSchema = new mongoose.Schema({
-    _postId: {
-        type: String,
-        required: true
-    },
-    user: {
+    postId: {
         type: String,
         required: true,
+        unique: true
     },
-    password: {
+    userId: {
         type: String,
         required: true,
-        unique: false
+        unique: true
     },
-    content: {
+    nickname: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    comment: {
         type: String
-    },
-    createdAt : {
-        type: Date,
-        default: Date.now()
-        }
+    }
 });
+
+commentsSchema.set("timestamps", { createdAt: true, updatedAt: true });
 
 module.exports = mongoose.model("Comments", commentsSchema);
