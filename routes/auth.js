@@ -7,9 +7,7 @@ const authMiddleware = require("../middlewares/auth-middleware.js");
 
 // 회원가입 API
 router.post('/signup', async (req, res) => {
-
     const {nickname, password, confirm} = req.body;
-
     try{
         // 닉네임 형식 검사
         let nicknameCheck = /^[a-zA-Z0-9]{3,}$/ // 최소 3자 이상, 알파벳 대소문자, 숫자로 구성
@@ -50,27 +48,46 @@ router.post('/signup', async (req, res) => {
             });
             return;
         }
-    }catch(err) {
+
+        const user = new User({nickname, password});
+        await user.save();
+
+        res.status(201).json({
+            message: "회원 가입에 성공하였습니다."
+        })
+    } catch(err) {
         res.status(400).json({
             errorMessage: "요청한 데이터 형식이 올바르지 않습니다."
         });
         return;
     }
-
-    const user = new User({nickname, password});
-    await user.save();
-
-    res.status(201).json({
-        message: "회원 가입에 성공하였습니다."
-    })
-    
 });
 
 
 // 로그인 API
 router.post('/login', async (req, res) => {
+    const {nickname, password} = req.body;
+    try{
+        const user = await User.findOne({nickname});
 
+        // DB에 닉네임이 없거나 사용자가 입력한 비밀번호와 일치하지 않은 경우
+        if(!user || user.password !== password){
+            res.status(412).json({
+                errorMessage: "닉네임 또는 패스워드를 확인해주세요."
+            })
+            return;
+        }
+
+        // jwt 생성
+        const token = jwt.sign({userId: user.userId}, "Secret-Key");
+        // 쿠키 생성
+        res.cookie("Authorization", `Bearer ${token}`);
+        res.status(200).json({token});
+    } catch(err) {
+        res.status(400).json({
+            errorMessage: "로그인에 실패하였습니다."
+        })
+    }
 });
-
 
 module.exports = router;
