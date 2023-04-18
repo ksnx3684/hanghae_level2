@@ -11,7 +11,7 @@ connect();
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", [authRouter]);
-app.use("/posts", [postsRouter, commentsRouter]);
+app.use("/posts", [postsRouter, commentsRouter, authRouter]);
 
 app.listen(port, () => {
   console.log("Server open on port", port);
