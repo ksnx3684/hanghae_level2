@@ -7,13 +7,11 @@ const commentsSchema = new mongoose.Schema({
     },
     userId: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     nickname: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     comment: {
         type: String

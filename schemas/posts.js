@@ -7,8 +7,7 @@ const postsSchema = new mongoose.Schema({
     },
     nickname: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     title: {
         type: String
