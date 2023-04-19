@@ -7,6 +7,7 @@ const authMiddleware = require("../middlewares/auth-middleware");
 router.post("/", authMiddleware, async (req, res) => {
   const { title, content } = req.body;
   const { nickname, _id } = res.locals.user;
+  console.log(nickname);
   if (Object.keys(req.body).length === 0) {
     return res
       .status(412)
@@ -36,7 +37,7 @@ router.post("/", authMiddleware, async (req, res) => {
 // 게시글 조회
 router.get("/", async (req, res) => {
   try {
-    const posts = await Post.find().select("-__v -content").exec();
+    const posts = await Post.find().select("-__v -content").sort("-createdAt").exec();
     const data = {
       posts: posts.map((a) => {
         return {
@@ -105,7 +106,7 @@ router.put("/:_postId", authMiddleware, async (req, res) => {
         .json({ errorMessage: "게시글 내용의 형식이 일치하지 않습니다." });
     }
     const post = await Post.findOne({ _id: _postId });
-    if (!post.userId.equals(_id)) {
+    if (post.userId !== _id.toString()) {
       return res
         .status(403)
         .json({ errorMessage: "게시글 수정의 권한이 존재하지 않습니다." });
@@ -121,6 +122,7 @@ router.put("/:_postId", authMiddleware, async (req, res) => {
     });
     res.status(200).json({ message: "게시글을 수정하였습니다." });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ errorMessage: "게시글 수정에 실패하였습니다." });
   }
 });
@@ -136,7 +138,7 @@ router.delete("/:_postId", authMiddleware, async (req, res) => {
         .status(403)
         .json({ errorMessage: "게시글이 존재하지 않습니다." });
 
-    if (!_id || !post.userId.equals(_id)) {
+    if (!_id || post.userId !== _id.toString()) {
       return res
         .status(403)
         .json({ errorMessage: "게시글 수정의 권한이 존재하지 않습니다." });
@@ -149,7 +151,7 @@ router.delete("/:_postId", authMiddleware, async (req, res) => {
     return res.status(200).json({ message: "게시글을 삭제하였습니다." });
   } catch (error) {
     console.log(error.message);
-    res.status(400).json({ errorMessage: "게시글 작성에 실패하였습니다." });
+    res.status(400).json({ errorMessage: "게시글 삭제에 실패하였습니다." });
   }
 });
 

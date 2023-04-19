@@ -33,6 +33,7 @@ router.post("/:_postId/comments", authMiddleware, async (req, res) => {
     });
     res.status(200).json({ message: "댓글을 작성하였습니다." });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ errorMessage: "댓글 작성에 실패하였습니다." });
   }
 });
@@ -105,7 +106,7 @@ router.put(
           .json({ errorMessage: "댓글이 존재하지 않습니다." });
       }
 
-      if (!existComment.userId.equals(_id)) {
+      if (existComment.userId !== _id.toString()) {
         return res
           .status(403)
           .json({ errorMessage: "게시글 수정 권한이 존재하지 않습니다." });
@@ -120,6 +121,7 @@ router.put(
       });
       res.status(200).json({ message: "댓글을 수정하였습니다." });
     } catch (error) {
+      console.log(error.message);
       res.status(400).json({ message: "댓글 수정에 실패하였습니다." });
     }
   }
@@ -149,7 +151,7 @@ router.delete(
           .json({ errorMessage: "댓글이 존재하지 않습니다." });
       }
 
-      if (!existComment.userId.equals(_id)) {
+      if (existComment.userId !== _id.toString()) {
         return res
           .status(403)
           .json({ errorMessage: "댓글의 삭제 권한이 존재하지 않습니다." });
